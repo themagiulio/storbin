@@ -6,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <title>Storbin - {% block title %}{% endblock title %}</title>
     <style type="text/css">
       html, body{
         height:100vh;
-      width:100vw;
+        width:100vw;
       }
     </style>
   </head>
@@ -23,27 +24,33 @@
       <div class="d-flex justify-content-center align-items-center" style="height:100vh; overflow:hidden;">
         {% block content %}{% endblock content %}
       </div>
-
-      <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-          <div class="d-flex">
-            <div class="toast-body" id="toast-body"></div>
-            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-        </div>
-      </div>
+      
     </div>
 
-      <script>
-        const toastElement = document.getElementById('toast');
-        const toastBody = document.getElementById('toast-body');
-        const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
+    <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container">
+    </div>
 
-        htmx.on('showMessage', (e) => {
-          toastBody.innerHTML = e.detail.value;
-          toast.show();
-        });
-      </script>
+    <script>
+      const toastContainer = document.getElementById('toast-container');
+
+      function createToastElement(id) {
+        const toastElement = document.createElement('div');
+        toastContainer.appendChild(toastElement);
+        toastElement.setAttribute('id', id);
+        toastElement.setAttribute('role', 'alert');
+        toastElement.setAttribute('aria-live', 'assertive');
+        toastElement.setAttribute('aria-atomic', 'true');
+        toastElement.classList.add('toast');
+        return toastElement;
+      }
+
+      htmx.on('showMessage', (e) => {
+        const toastElement = createToastElement(e.timeStamp);
+        const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
+        toastElement.innerHTML = `<div class="d-flex"><div class="toast-body">${e.detail.value}</div><button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>`;
+        toast.show();
+      });
+    </script>
 
   </body>
 
