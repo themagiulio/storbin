@@ -22,7 +22,17 @@
     <div class="container">
       
       <div class="d-flex justify-content-center align-items-center" style="height:100vh; overflow:hidden;">
-        {% block content %}{% endblock content %}
+        <div class="card shadow-sm">
+
+          <div class="card-header fw-bold">
+            Storbin - {% block card_header %}{% endblock card_header %}
+          </div>
+
+          <div class="card-body">
+            {% block card_body %}{% endblock card_body %}
+          </div>
+
+        </div>
       </div>
       
     </div>

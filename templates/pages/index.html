@@ -2,32 +2,30 @@
 
 {% block title %}Home{% endblock title %}
 
-{% block content %}
-  <div class="card shadow-sm">
+{% block card_header %}Home{% endblock card_header %}
 
-    <div class="card-header fw-bold">
-      Create bin
+{% block card_body %}
+  <form hx-post="/upload/" x-data="{ disabled: true }">
+    <textarea
+      class="form-control mb-3"
+      placeholder="Write some text..."
+      name="content"
+      style="height: 100px;"
+    ></textarea>
+
+    <div class="form-check mb-3">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="confirm-checkbox"
+        autocomplete="off"
+        @click="disabled = !disabled;"
+      >
+      <label class="form-check-label" for="confirm-checkbox">
+        I understand that if I don't have access to the bucket, I can't remove the bin once it is uploaded.
+      </label>
     </div>
 
-    <div class="card-body">
-
-      <form hx-post="/upload/" x-data="{ disabled: true }">
-        <textarea
-          class="form-control mb-3"
-          placeholder="Write some text..."
-          name="content"
-          style="height: 100px;"
-        ></textarea>
-        <div class="form-check mb-3">
-          <input class="form-check-input" type="checkbox" id="confirm-checkbox" @click="disabled = !disabled;">
-          <label class="form-check-label" for="confirm-checkbox">
-            Once you have uploaded the bin, you can't delete it.
-          </label>
-        </div>
-        <button type="submit" class="btn btn-primary" x-bind:disabled="disabled">Upload</button>
-      </form>
-
-    </div>
-
-  </div>
-{% endblock content %}
+    <button type="submit" class="btn btn-primary" x-bind:disabled="disabled">Upload</button>
+  </form>
+{% endblock card_body %}

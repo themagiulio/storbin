@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ bin_id }}{% endblock title %}
+
+{% block card_header %}{{ bin_id }}{% endblock card_header %}
+
+{% block card_body %}
+  <textarea
+    readonly
+    class="form-control"
+    placeholder="Write some text..."
+    name="content"
+    style="height: 100px;"
+  >{{ content }}</textarea>
+{% endblock card_body %}
