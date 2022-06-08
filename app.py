@@ -66,8 +66,7 @@ def upload():
         status=204,
         headers={
             'HX-Trigger': json.dumps({
-                'showMessage': f'''Bin successfully uploaded on
-                <a href="/{bin_id}/{len(content)}" target="_blank">/{bin_id}</a>.''',
+                'showMessage': bin_id,
             })
         },
     )

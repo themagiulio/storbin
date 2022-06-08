@@ -37,29 +37,42 @@
       
     </div>
 
-    <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container">
+    <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container" x-data>
+      <template x-for="toast in $store.toasts">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" :id="$id('toast')">
+          <div class="d-flex">
+            <div class="toast-body">
+              Text uploaded on <a target="_blank" :href="toast" x-text="'/' + toast"></a>.
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        </div>
+      </template>
     </div>
 
     <script>
-      const toastContainer = document.getElementById('toast-container');
-
-      function createToastElement(id) {
-        const toastElement = document.createElement('div');
-        toastContainer.appendChild(toastElement);
-        toastElement.setAttribute('id', id);
-        toastElement.setAttribute('role', 'alert');
-        toastElement.setAttribute('aria-live', 'assertive');
-        toastElement.setAttribute('aria-atomic', 'true');
-        toastElement.classList.add('toast');
-        return toastElement;
+      function delay(time) {
+        return new Promise(resolve =>
+          setTimeout(resolve, time)
+        );
       }
 
       htmx.on('showMessage', (e) => {
-        const toastElement = createToastElement(e.timeStamp);
-        const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
-        toastElement.innerHTML = `<div class="d-flex"><div class="toast-body">${e.detail.value}</div><button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>`;
-        toast.show();
+        Alpine.store('toasts').push(e.detail.value);
+        delay(100)
+          .then(() => {
+            (new bootstrap.Toast(
+              document.getElementById(
+                `toast-${Alpine.store('toasts').length}`
+              ),
+              { delay: 5000 },
+            )).show();
+          });
       });
+
+      document.addEventListener('alpine:init', () =>
+        Alpine.store('toasts', [])
+      );
     </script>
 
   </body>
